@@ -1,7 +1,9 @@
 """
-Given an array of integers, return indices of the two numbers such that they add up to a specific target.
+Given an array of integers, return indices of the two numbers such that they
+add up to a specific target.
 
-You may assume that each input would have exactly one solution, and you may not use the same element twice.
+You may assume that each input would have exactly one solution, and you may not
+use the same element twice.
 
 Given nums = [2, 7, 11, 15], target = 9,
 
@@ -17,7 +19,7 @@ class Solution:
         :type target: int
         :rtype: List[int]
         """
-        
+
         # First try, passes
         """
         for index, num in enumerate(nums):
@@ -33,7 +35,7 @@ class Solution:
         # track if we have a mix of +/- ints in our list, as that can
         # make things trickier and will break our optimizations
         mix_pos_neg = any(n < 0 for n in sortnums)
-        
+
         # This is a non-pythonic method of iterating over the list, but
         # `pop`ing can interfere with other iteration methods, so it is
         # a bit safer in this case.
@@ -46,7 +48,7 @@ class Solution:
             # for a mix of positive and negative ints.
             if num1 > target and not mix_pos_neg:
                 continue
-            # Start our second iterator from 
+            # Start our second iterator from
             for num2 in sortnums:
                 # Short circuit if our outer number + our smallest number is
                 # already greater than our target. This again can behave oddly
@@ -60,26 +62,27 @@ class Solution:
                     if num1 != num2:
                         return [nums.index(num1), nums.index(num2)]
                     # have to handle the case where our numbers are the same,
-                    # otherwise we will pull the same index twice, which violates
-                    # the "you may not use the same element twice" rule
+                    # otherwise we will pull the same index twice, which
+                    # violates the "you may not use the same element twice"
+                    # rule
                     else:
                         index1 = nums.index(num1)
                         index2 = nums.index(num2, index1+1)
                         return [index1, index2].sort()
         """
-        # Worst case is still the same (slightly worse because of the sorting and
-        # index lookup, but average case is significantly better due to the early
-        # branch exits
+        # Worst case is still the same (slightly worse because of the sorting
+        # and index lookup, but average case is significantly better due to the
+        # early branch exits
 
         # Let's try something else...
         for index, num in enumerate(nums):
             # instead of checking every item in the list, why not just check if
-            # the list contains the difference between our current number and the
-            # target?
+            # the list contains the difference between our current number and
+            # the target?
             if (target - num) in nums[index + 1:]:
                 return [index, nums.index(target - num, index + 1)]
-        # BOOM! That's the one. Much less code (and therefore fewer bugs, right?),
-        # plus the runtime should be roughly O(n)
+        # BOOM! That's the one. Much less code (and therefore fewer bugs,
+        # right?), plus the runtime should be roughly O(n)
 
 
 if __name__ == '__main__':
